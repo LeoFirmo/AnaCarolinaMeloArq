@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ana Carolina Melo - Arquiteta Residencial e de Clínicas em Campinas e região. Transformo espaços em experiências sofisticadas. Projetos que funcionam e acolhem.">
+    <meta name="keywords" content="Arquiteto Campinas Cambui, Arquitetura de Clínicas, Arquitetura Residencial, Ana Carolina Melo, Design de Interiores">
+    <meta name="author" content="Ana Carolina Melo">
+    <title>Ana Carolina Melo | Arquitetura Residencial e Clínicas</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Ícones (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuração de Tema Customizado -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#f9f7f3',
+                        'paper-2': '#f0ece4',
+                        'ink': '#2b2622',
+                        'mud': '#6b6054',
+                        'clay': '#a89c8c',
+                        'olive': '#5c664a',
+                        'olive-hover': '#4a523b',
+                        'line': '#e2ddd3'
+                    },
+                    fontFamily: {
+                        'display': ['"Playfair Display"', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: theme('colors.paper'); color: theme('colors.ink'); }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .spiral-wrap {
+            position: absolute;
+            transition: z-index 0s;
+        }
+        
+        .spiral-wrap:hover {
+            z-index: 1000 !important;
+        }
+
+        .spiral-item {
+            background: #f9f7f3; /* Cor do papel fotográfico */
+            padding: 0.75rem;
+            padding-bottom: 3.5rem; /* Borda grossa em baixo tipo foto revelada */
+            border-radius: 4px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease;
+            transform-origin: center center;
+        }
+
+        .spiral-wrap:hover .spiral-item {
+            transform: rotate(0deg) scale(1.15) !important;
+            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6);
+        }
+
+        .spiral-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        /* Hover Overlay da Foto */
+        .polaroid-overlay {
+            position: absolute;
+            top: 0.75rem; 
+            left: 0.75rem; 
+            right: 0.75rem; 
+            bottom: 3.5rem;
+            background: rgba(43,38,34,0.4);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .spiral-wrap:hover .polaroid-overlay {
+            opacity: 1;
+        }
+
+        .polaroid-text {
+            background: #f9f7f3;
+            color: #2b2622;
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transform: scale(0.9) translateY(15px);
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .spiral-wrap:hover .polaroid-text {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Botão WA Pulsante */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        .wa-float { animation: pulse-green 2s infinite; }
+
+        body.lightbox-open { overflow: hidden; }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <nav class="fixed w-full z-40 bg-paper/90 backdrop-blur-md border-b border-line transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="flex-shrink-0 flex items-center">
+                    <span class="font-display font-medium text-xl tracking-wide text-ink">Ana Carolina Melo</span>
+                </a>
+                
+                <div class="hidden md:flex space-x-8 items-center text-sm font-medium text-mud">
+                    <a href="#sobre" class="hover:text-ink transition-colors">Sobre</a>
+                    <a href="#portfolio" class="hover:text-ink transition-colors">Portfólio</a>
+                    <a href="#avaliacoes" class="hover:text-ink transition-colors">Avaliações</a>
+                    <a href="#contato" class="hover:text-ink transition-colors">Contato</a>
+                    <a href="https://wa.me/5512992316292" target="_blank" class="px-5 py-2 bg-olive text-white rounded-full hover:bg-olive-hover transition-colors shadow-md">Iniciar Projeto</a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-ink hover:text-mud focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-paper border-b border-line absolute w-full shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-1 sm:px-3 text-center">
+                <a href="#sobre" class="block px-3 py-3 text-base font-medium text-mud hover:text-ink hover:bg-paper-2 rounded-md">Sobre</a>
+                <a href="#portfolio" class="block px-3 py-3 text-base font-medium text-mud hover:text-ink hover:bg-paper-2 rounded-md">Portfólio</a>
+                <a href="#avaliacoes" class="block px-3 py-3 text-base font-medium text-mud hover:text-ink hover:bg-paper-2 rounded-md">Avaliações</a>
+                <a href="#contato" class="block px-3 py-3 text-base font-medium text-mud hover:text-ink hover:bg-paper-2 rounded-md">Contato</a>
+                <a href="https://wa.me/5512992316292" target="_blank" class="block mt-4 px-5 py-3 bg-olive text-white rounded-full hover:bg-olive-hover transition-colors w-max mx-auto">Iniciar Projeto</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex items-center min-h-[90vh]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal text-center lg:text-left">
+                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-tight font-light text-ink tracking-tight mb-6">
+                        Casas que funcionam.<br>
+                        <span class="italic text-clay">Clínicas que acolhem.</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-mud max-w-xl mx-auto lg:mx-0 font-light leading-relaxed mb-10">
+                        Transformo espaços em experiências sofisticadas. Arquitetura voltada para o seu bem-estar e o sucesso do seu negócio em Campinas e região.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="https://wa.me/5512992316292?text=Oi%20Ana%21%20Vi%20seu%20site%20e%20quero%20um%20or%C3%A7amento%20para%20meu%20projeto%20residencial." target="_blank" class="group relative flex items-center justify-between rounded-[18px] bg-olive hover:bg-olive-hover text-[#f6f1e9] px-6 py-4 shadow-lg transition-all hover:-translate-y-1">
+                            <div class="text-left mr-6">
+                                <span class="block font-display text-xl">Projeto Residencial</span>
+                                <span class="block text-xs text-[#d7d2c7] mt-1">Orçamento via WhatsApp</span>
+                            </div>
+                            <i class="fas fa-arrow-right text-[#d7d2c7] group-hover:text-white transition-colors"></i>
+                        </a>
+                        <a href="https://wa.me/5512992316292?text=Oi%20Ana%21%20Quero%20transformar%20minha%20cl%C3%ADnica%2Fconsult%C3%B3rio." target="_blank" class="group relative flex items-center justify-between rounded-[18px] border border-clay hover:border-mud bg-transparent hover:bg-paper-2 text-ink px-6 py-4 transition-all hover:-translate-y-1">
+                            <div class="text-left mr-6">
+                                <span class="block font-display text-xl">Clínica / Consultório</span>
+                                <span class="block text-xs text-mud mt-1">Fale sobre seu espaço</span>
+                            </div>
+                            <i class="fas fa-arrow-right text-clay group-hover:text-ink transition-colors"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="reveal relative h-[500px] lg:h-[650px] w-full rounded-2xl overflow-hidden shadow-2xl">
+                    <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAExTh1XF-nbNZtv-0sryOdduGAWmHZeFbMRcyLFSV1NHMz7CzOXpACHmWUUXlhB8DbcOPyXsFvamwh87fk_sNJb7wQ8KxIoXABwBJ_ZjMUVgTwIqtUF4lEAffHFfMUwEwxQgJFL=w1900-h1200-k-no" alt="Ana Carolina Melo Arquiteta" class="w-full h-full object-cover">
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-paper-2 rounded-full border border-line z-[-1]"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre" class="py-20 bg-paper-2/30">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <span class="text-xs tracking-[0.2em] text-clay uppercase font-semibold mb-3 block">A Profissional</span>
+            <h2 class="font-display text-4xl mb-8 text-ink">Arquitetura de Precisão e Sensibilidade</h2>
+            <div class="w-16 h-px bg-mud mx-auto mb-8"></div>
+            <p class="text-lg text-mud font-light leading-relaxed max-w-3xl mx-auto mb-6">
+                Como arquiteta em Campinas, meu foco é criar lares que abraçam a sua rotina e clínicas que transmitem segurança, conforto e sofisticação para seus pacientes. Acredito que o bom design não é apenas sobre o que se vê, mas sobre como nos sentimos no espaço.
+            </p>
+            <div class="inline-flex items-center gap-3 text-sm text-mud tracking-wider uppercase font-medium mt-4 bg-paper px-6 py-2 rounded-full border border-line shadow-sm">
+                <i class="fas fa-compass text-clay"></i>
+                <span>CAU A00000-0</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="pt-32 pb-48 bg-ink relative overflow-hidden">
+        <!-- Fundo sutil para destacar os quadros brancos -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,156,140,0.1),transparent_70%)] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-10 reveal">
+                <span class="text-xs tracking-[0.2em] text-clay uppercase font-semibold mb-3 block">Mosaico Criativo</span>
+                <h2 class="font-display text-5xl md:text-6xl text-paper mb-6">Exposição de Obras</h2>
+                <div class="w-24 h-px bg-clay mx-auto mb-6"></div>
+                <p class="text-paper/70 text-lg font-light max-w-2xl mx-auto">Explore nossa curadoria deslizando as fotografias espalhadas.<br>Toque em qualquer imagem para ampliar.</p>
+            </div>
+
+            <!-- O container onde a Hélice/Espiral de fotos vai ser injetada -->
+            <div id="dynamic-gallery" class="w-full relative mt-16 mx-auto"></div>
+
+            <div class="mt-40 text-center reveal relative z-20">
+                <a href="https://www.instagram.com/anacarolinamelo_interiores" target="_blank" class="inline-flex items-center gap-3 rounded-full border border-clay hover:border-paper hover:bg-white/5 text-paper px-10 py-4 transition-colors font-medium tracking-wide">
+                    <i class="fab fa-instagram text-xl text-clay"></i>
+                    Acompanhe as obras no Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="avaliacoes" class="py-20 bg-paper-2/30 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <div class="flex justify-center items-center gap-2 text-yellow-500 text-2xl mb-4">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <h2 class="font-display text-4xl text-ink mb-2">Nota 5,0 no Google</h2>
+                <p class="text-mud font-light">Baseado em avaliações de clientes reais.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+                <div class="bg-paper border border-line p-8 rounded-2xl shadow-sm relative">
+                    <i class="fas fa-quote-left text-3xl text-clay/20 absolute top-6 left-6"></i>
+                    <p class="text-ink/90 font-light leading-relaxed mb-6 mt-4 italic">"Ana é uma arquiteta muito profissional, atenciosa e detalhista. Fez um projeto incrível para minha casa e cuidou de todos os detalhes durante a obra. Foi um trabalho impecável, recomendo 100%."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-clay flex items-center justify-center text-paper font-bold">M</div>
+                        <div>
+                            <h4 class="font-medium text-ink">Majo Gutiérrez</h4>
+                            <span class="text-xs text-mud">Cliente Residencial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-paper border border-line p-8 rounded-2xl shadow-sm relative transform md:-translate-y-4">
+                    <i class="fas fa-quote-left text-3xl text-clay/20 absolute top-6 left-6"></i>
+                    <p class="text-ink/90 font-light leading-relaxed mb-6 mt-4 italic">"Excelente! Um sonho realizado com a melhor arquiteta, Ana Carolina. Profissional muito dedicada e responsável, Top das galáxias. Super indico!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-olive flex items-center justify-center text-paper font-bold">S</div>
+                        <div>
+                            <h4 class="font-medium text-ink">Sheila Maria</h4>
+                            <span class="text-xs text-mud">Cliente</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-paper border border-line p-8 rounded-2xl shadow-sm relative">
+                    <i class="fas fa-quote-left text-3xl text-clay/20 absolute top-6 left-6"></i>
+                    <p class="text-ink/90 font-light leading-relaxed mb-6 mt-4 italic">"Profissional super competente, comprometida com o trabalho e satisfação dos seus clientes, ela faz acontecer! Super recomendo."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-paper-2 flex items-center justify-center text-ink font-bold border border-line">P</div>
+                        <div>
+                            <h4 class="font-medium text-ink">Priscilla Frenkel</h4>
+                            <span class="text-xs text-mud">Cliente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div class="reveal">
+                    <h2 class="font-display text-4xl text-ink mb-8">Vamos tomar um café e falar sobre o seu espaço?</h2>
+                    
+                    <div class="space-y-8 mt-10">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center shrink-0">
+                                <i class="fas fa-map-marker-alt text-clay text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-ink mb-1">Endereço</h3>
+                                <p class="text-mud font-light leading-relaxed">
+                                    Av. José de Sousa Campos, 1815 - sala 407<br>
+                                    Cambuí, Campinas - SP<br>
+                                    CEP: 13058-410
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center shrink-0">
+                                <i class="fas fa-clock text-clay text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-ink mb-1">Horário de Atendimento</h3>
+                                <p class="text-mud font-light">De Seg a Sex: 08:00 às 18:00</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center shrink-0">
+                                <i class="fas fa-phone-alt text-clay text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-ink mb-1">Contato</h3>
+                                <p class="text-mud font-light">(12) 99231-6292</p>
+                                <a href="https://wa.me/5512992316292" class="text-olive hover:text-olive-hover font-medium text-sm mt-1 inline-block transition-colors">Chamar no WhatsApp <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-lg border border-line">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=-22.8881672,-47.0466946&hl=pt-BR&z=17&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Localização Ana Carolina Melo Interiores">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-paper-2 border-t border-line py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-8">
+                <p class="font-display italic text-2xl sm:text-3xl text-ink/90 leading-snug font-[300]">
+                    Clínicas que acolhem,<br>casas que funcionam.
+                </p>
+            </div>
+            
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="https://www.instagram.com/anacarolinamelo_interiores" target="_blank" class="w-10 h-10 rounded-full bg-paper flex items-center justify-center text-mud hover:text-ink hover:scale-110 transition-all border border-line shadow-sm" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/5512992316292" target="_blank" class="w-10 h-10 rounded-full bg-paper flex items-center justify-center text-mud hover:text-ink hover:scale-110 transition-all border border-line shadow-sm" aria-label="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+
+            <div class="w-24 h-px bg-line mx-auto mb-8"></div>
+
+            <div class="flex flex-col items-center gap-2">
+                <a href="mailto:anacarolinamelointeriores@gmail.com" class="text-sm text-mud/80 hover:text-ink underline underline-offset-4 decoration-clay/50 transition-colors">anacarolinamelointeriores@gmail.com</a>
+                <p class="text-xs tracking-wider uppercase text-clay font-medium mt-2">
+                    © 2026 Ana Carolina Melo Arquitetura. Todos os direitos reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão WhatsApp Flutuante -->
+    <a href="https://wa.me/5512992316292?text=Ol%C3%A1%2C%20Ana%21%20Vim%20pelo%20seu%20site%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto." 
+       target="_blank" 
+       class="fixed bottom-6 right-6 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-2xl z-[30] wa-float hover:bg-[#1EBE5A] transition-colors"
+       aria-label="Chamar no WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <div id="lightbox" class="fixed inset-0 z-[100] bg-ink/98 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex flex-col justify-center items-center">
+        <!-- Header / Fechar -->
+        <div class="absolute top-0 w-full p-4 md:p-6 flex justify-between items-center z-[110] text-paper">
+            <span id="lightbox-counter" class="font-sans text-sm tracking-widest text-clay font-medium"></span>
+            <button onclick="closeLightbox()" class="text-3xl hover:text-clay transition-colors p-2"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <!-- Botões de Navegação -->
+        <button onclick="changeLightboxImage(-1)" class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-paper/70 hover:text-white text-3xl md:text-5xl transition-colors z-[110] p-4 hidden md:block">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <button onclick="changeLightboxImage(1)" class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-paper/70 hover:text-white text-3xl md:text-5xl transition-colors z-[110] p-4 hidden md:block">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Container da Imagem -->
+        <div class="relative w-full h-full max-w-7xl px-4 md:px-24 flex justify-center items-center select-none" id="lightbox-touch-area">
+            <img id="lightbox-img" src="" alt="Projeto Ampliado" class="max-w-full max-h-[80vh] object-contain rounded-sm shadow-2xl transition-transform duration-300">
+        </div>
+        
+        <!-- Dica Mobile -->
+        <div class="absolute bottom-10 text-clay text-xs tracking-widest uppercase md:hidden pointer-events-none">
+            <i class="fas fa-exchange-alt mr-2"></i>Deslize para os lados
+        </div>
+    </div>
+
+        <script>
+        // Array de Imagens 
+        const galleryImageIds = [
+            "APNQkAGfCZxR1Jhkm76nuqy_SFt4XfXR5KoQK5STPI35DWT6jnDVwUnmOp4pkJD14SO4YGJmwfn2YmGulm-NANgcEa9uY341iFT8qMPjY1TecRXmPQaqsSwBI3tsAdAx6Q42Mp2D-l6dsqzy4JAq",
+            "APNQkAG3NJtV4rUUhDugT2ytP7w2Dk7vw2Mp2Nunlj698ENcoSQEiSasosbG_BSfuqL1-qVoD43QAHilEanAjzx_AjaD7tYCU43aYeXySo6NeIXVC4yhLLWA43YneMw9PCSsYyPTKLgaRTQ85kk",
+            "APNQkAE22UXmA7ICIkztf5LxFLob_sluCv3_lT6fmK0yCo3UG__dFMsF65z_hMvf0ScD604GNd3VZwwPU5iVCRM0kWiopFdp1hYE0be85705w4x-cT11LXXvOcU4xtat-CquV-AKnrad",
+            "APNQkAHvJv3TvUGtZittc38yQGx1mjIw0TksciuleejpXf9QKgKtdcc2tzInulUKa8EObXr2l2U5nEFSnp38IzwN5qkRJJvPfb7jbjfS_75yfL6FZMM0ZlSg3ADwM9U84ecQ8-H4KNRS",
+            "APNQkAE_k7p5MnRS8aktb8V4XFpmNVuW4f9qsDEGVSqJXp-40-fdqwwkmOWSqs2KcANa8aGJpA2ooPVmLtTQbzsA9LIGv_-GVJUZlTXJWpLI86eah7kaBXLiRqS_KwofX_qiPVQ4yw-QAuT6yGV0",
+            "APNQkAFLPMe__xvgwyX7SRLAeIojIGtAKSsHh2zgDKAHJx6YGXwWTMy9Y19pZmFIxR1MC3WMjgbGCQsCESu-3s2vq-tqcKf7FZa0AGQVJmPj__q7LWCjzYZ9uLgb7DN8XdOpcJ14kg_7",
+            "APNQkAHe22VW2nkcpKknZGaoUgQNFmU3rBgDR0E_7S29HB5rBNra63ntt_buXOMdmnzzxggZab2g_Vx1Wa7FqaGYuA3ycGqXWguVpSA1FaJKnNAbjJ1PaCBLThVY5RGd9YybX_1uS9lq_w",
+            "APNQkAES6KRBTJqQKzFUvYwsHw7KTrIH9NlI0Mn7LLkRE0yPfMXdqX2vb4rDjY16iecMFmGCxRn52hyKqtIbU6rNx38LVztmi7m1L-SYkQ_bkgTJTR_jCI4Mp8fph9Wl5ubcHpqi3j1L",
+            "APNQkAEx53Vhx15-1mTECtoQXBGCL6k18I0uekB5L32rKrqsvZZNbEV236HAARiE-GOEqK_puisa0quc2FKcA5KOlW8vzWasxbVz8xsSk8iLbxX5HT4HmqSq7zcPTy2oH_VURDXjsMdjDA",
+            "APNQkAECiKWDZ_zRpawejJEh8XWT6woXBnv72uwLsxAiSoITzaa5j5w-zDDIpUbhmgW8e6wcdO3_HjNpS48wphWEewtnwkkr_G6kfdQgSNpv1lN8tWSrMVzqbytGujywbAg5s5PP7Ekvc-O0aws",
+            "APNQkAHv1Hko7Qp-61JccakmxuKOfqzmjUegDUEQVoJh7Rb4djc_uq8EEdgMKleIPGhqz5MbxVa7Us6c-z6yekHr_gfF3gGNJZeZWFkGZ6jvWlon9kyAAAE_HwCpbRGn8aS1dpqhDnex",
+            "APNQkAE9hv9IkBxLvS8fsNVWC_bvTa706bYq5dYQNtLwSnQrRD_1BLyOuPEXXhRg2TMDl97NJ5dKcZW06gA3QuyfZkCWNmZI07kQ-lyl3yAwUCRCU0BMor84RUU7sSTLusDzyr44BpsN",
+            "APNQkAFISSx-x7-Yxr8JgD2BpYl7BRjjM2RB4bENvCpu4TjmXoZ_jQK3gXbAIp1qAeWQzZyulmx6gX1RPlNhWs8ehYCkIlmbahQ6Fiw6r1Ajzi-HFklB3K_MJbokmGHUiQtYitRwiyym",
+            "APNQkAGD6Ezh5nhjowkkaRzJ87CHfC_z_nBDliCsYXoWTmz9u4381fbinHayY_AGnxShbjHjJF3-nSNmqAGkYmIb3ucJ8M8eCRo_pUQ7wihjW89D0uGIZZljhbBaCDVKouwCyER3kPGc",
+            "APNQkAFcZpro2SvbN8x5Lu0hqzPOX-RKaEDZaYFrW0BBRgUt-G3ypXlDyupE3DmPeHULN4T77oi_9A4rNpl4fh8uOx-e2P0Dk2tN6pBSri7OBCD9D0L_vXLAQQYxMS1cbVqppLyfdxvJtkiFeADf",
+            "APNQkAGnv2PRyeHr-klKbB-GXwQl6JLzpQrTNqrveQUeEF9PeI0R0o6boCke50cbkHhsVH82-1eNGYvFkvmW25cjyWA42S_tPx3-1MpfAKko-u-kqq2OOy7MO-AJnPwUaykQUNOfV9xECFWmeuD9",
+            "APNQkAGltbAzXwJhK58Ge37v5NRFFlwQipq3uOQtJ1flVzQ7PLyEsSXq2m7EXxz6rOMaUClco7HZtRnvy3RoImxH5BaU6hal_yt28qgmxeDHineyq-s5Mjp1dkzlH-xKDhcD8J-p8Ung",
+            "APNQkAFOAfcRETFBh9PIA_xT1f8_FyLPbmQMkXJ9LL_Pg9raABQP_jbxtbi6D0vuLMNSEuMLw6CLpL3Z5XGveiXLguTHQA6u2Rh-WoAyoWIhQRZEvVbbcFSjDPJRCNES_vGh1JFUVjAG",
+            "APNQkAEjGBVg0YBj2gMivQs-w85bOE35kjd43Ss6Siu8dTNAG2Tgk2CEC78HKHGmiSoBXID-6cWHHgmtL5ijfQElDLZJYKqIwk5B9TnAn_-KjGm1Mqg48XwrJHKPnSol5TZRUPUKV8Xj",
+            "APNQkAHfw_XJAh-SuU3bDFJQtfkjrwsEHgbP0Ya4kcOh_PkM85rXvQ5BPRhzLIgRjtNr4VRnOE9RW1MyFhnq0yOCZcx_2ClH2NIJXcqo5zUTzKJXYZlHk_AIPhYhisTSelRVLjxfBhovdg",
+            "APNQkAHeZEa1um48lSf0hdSOdCi8sOiWFcmBWV0WEttFAeCU4taugj5v50ViUkaBeRvr21ofHgcR27wSw49A_uCGmB5STJXutu3ZQMgrqQYY_z3dZIJLqGmPr5bAgrUOvhLlXllOrakd",
+            "APNQkAFQrH2goJ3rISvnhzI-Ql7f4w2Mb4jhIk-NzXM8Xg6-owWrug7-epZ6SumNp_2FsTMFJxfuDZn8Zq_4H7XmruN1h6i8jZ_7ckdwOfztN9Ij06OjqpUmiQWqu1kHt1qITz-_8GtP",
+            "APNQkAFVCx5c_a3cQC9Q2qbthtVLBESQGUu8NX1On9pYKoC8ciXxuoGUxk67hyYA4pA3kbN5ZBFm_3l329ywNyRxa5Q_wTw4u9ARJeQWHgpZbk4chH5JEQ3tPg02-XnAzNqdaerqDSnvDznSkaY",
+            "APNQkAENFuS5z7AWMb9dxpxkSHcG92W6cgY0TNcaIsmiof2fzQbvUYVSdQ8EUxYLgyPlxFiKnI0SDNn8IhAXRQo83UQt5GPgMCJkRQEYWr5YQEljTXfebbH3LPCZHSHfhTCZhC82j4cCdQ",
+            "APNQkAG1aRcPhKb0I-_n07sQpW7wBcrsVzrVHPcbmt9SzBFITOSyZl-ssCQEnrnNvYsZxev_r7gWjlFi2NbatRSakh-50PzqEHWfUXxJVJDHJQ9aV1bla0yWbEj5H8KvqnH8VFMKqK2_",
+            "APNQkAHnl1hNT7NfWcLyJrWz5614GYQMcqAjyiy3wpPX2YFA2XCW3QVh7hk4evHtLb2-TIRA2ChEotJZcjUbEI5i2BA9bFsudwLpu6AaieFnlwOZGIUvK95sJsOTLpwj8qZjyyGlWloNFQ",
+            "APNQkAEfVn_38AqLIJu1FKvjlXy0Zm5YKukTVb3EMm7vJriAJeiFAGkJ7l-8mCpnMDhN6Nak7TuAvt53PCBNd205BTFQFYCaO72MFaLTKIChte5xoTM_HhQO0b4Z9_h-1bLCI4wC5gKJEg",
+            "APNQkAGwvaULUc2_cMqddLq2l0oE3IusC07noERVqKGajmXjPX91UEQraH8qQ2CIhZlDREOVWh3GewqngcsBrXQKYc5qUjiD6cwi5YQtjrS6DNRVawwmgKyQWLnuDrIKgR7acklYlGv838Dz3Pk",
+            "APNQkAG2KRZzJnkgbE6UbGC8lwPOt5bKt-8xVeJe2AvBI84qCvkgNao1ej812OcpTqWwi2PPwusUAuMDQLoUifM7EvQL3opvhtG67QcYZeFzAwZq_nD7s18rb1kF8sR9h8TJb4UYbkTw",
+            "APNQkAGEZufIUOX3p3_MkH7pLrTO5VlgAAwEqsinkUih9sqrCxJ_lh3hdsL0FsyHa-GH4rRjipIb2A05NCrvVpQP4ZO-xuX5Le5rAzBZ9dhca6bB0gRTkjfcuLYwds1cHmM4jwKq3vuz",
+            "APNQkAGzGQbVhMge4xGE9vBPzM-JO448EK4R_xBHbo_tPkwDxHc0czZ9hulXjbirrNIZfshZr4fg7araQ34oNQFf6to8B0TE_Wme6lKvt6_K4BItSYQwT6IE3hf1y5_vv2fp7f10QTOgaA",
+            "APNQkAECEsQRweWOt9pmGrI7UJFSaWkxrKJmdNo6RfES8FRM-JR0UAArqH15ybrSJaoFEy3q1JlcML45Q54txwmobycaF-mDxFVwap8JOqpc4Y6J5RikOY8NoJu_Bxy_NZhK3EWmAOw",
+            "APNQkAEDPXWmyIX6y7d9TZHkX9mGYlfxWmcXTocLQfGOEx2uwX0D_kFabmjUEQp0m-eN04xt4503fsa-RL0CMbjV92BpMYc2-1JpTsqhXsVLZLW7STYFdMnYh-qgbjPEo5evRTbc_R5S",
+            "APNQkAEzMe4uV8H0py8D0Gfqc_dx6VFIhP7MBMjDK2G0kdepd0KHUyK17EKYVLSs-VFvEc416xEi2UMEK-guQFL5uOPIW3aAS3TUUfKtkGuOEHHL8Ob0KXiCQhch_eccvV4RZ2rhTalN",
+            "APNQkAELR1cIXK1GnkQBqd4pDbl5T6ncr8JAzayoZSR4WWrfOx_Q1qB8506x1Aznv4l-m3-iAYH3T9fSvgFhlqOUFAO5p3ySVik3OPHgcqrgB36CUC6NWJ9L6ZbqhtR_wI5vaVHVvF8s",
+            "APNQkAFqitBZvoA_LgezxWQaEMDB9V1S60GWW_HHUkeJoh0b4_dZjW6M2MDmHMOyvzuyxRRc8h-fw7vVaBdL_PRutjcgpwSOTPtM988dJHkR91uI85v38X2CVuA6wJX-I0-m2Q6oUaJ-OO4P4VE",
+            "APNQkAGFLxeTpTL12r2-tyIRi9zYZKEv3GH5lFkXWeVB8n_TcO2SFZilM_c3q10Sts4nbMrst34u22WwOZDVKk2I1SCLRhxcxoLIYXV4iuWnDvOBcX9SKBGveZ47uinAurdzR78pfwkpMA",
+            "APNQkAFux_rKOL6kmIGsCIrRie-QVF4MV6uLWd1BPtkWvVT7keQP_DssjMlGDs_3YL4U3vKrcOZMcCrri1m2QtGDAQkEVqhZMLlDxnuhMld8n3F8gxBSx2ItDP7EtbUdnBB-c9_dRPm0JhBn4v8",
+            "APNQkAGniYDM8VP_Ahn4kF4Rgutbj6dtLp3iaA8OZM4P8zTzR4vn4ZjF8JE-sUp-s13Zh6xmaeOY9N1kPni3ueNzWfIBfFt2MQPsumneJzKnZ-D9S438qKQJr4ZIqhFQcvwlG3JBG57G",
+            "APNQkAFBMFdjsA-EuF8eqIKaIP_WeN8Tf4cG7tn5Lpnr4htJzH291KPhUevkkXIKvQLNaeSRiDaPAThqExCgBBwnolnpzDnB08aErRNAKxnCn2q6MQtKC-F0e1DJfOKKX0Jl4tfolyXd",
+            "APNQkAFa9pUFsogiCI0tK5x0riM2-j_fKXEV6BlFjYP6pJ2f2XKHTSGt5rWLMaN2vhDqXEEegXAIqwIx5CPOq3UMIpVOKuY9eKMbvUXUzMKjBdTyAcbDsrwvJvOWJ-iWL7aUSHdU1zxZCg",
+            "APNQkAHXGMJy_T9FnOOFJG4kdl_8g1s_Vt0_waJ1aCqe2pSk3gggRq9JWvIbK91IO4C1BR5cHnIm4DkhUCW6ULN_KmEGdi5Yv8UnH3DhLKQzzS7fIvG780Xihi0y_hgBTJEIDC54ZtHR",
+            "APNQkAEmwXjBUmLPCRO02C5VuZ7hGqQIOpXALyzAiQlsLV2tH2zKbQZdoh6uZvqnIaS6irush7HI6TuzgLcWBCHEbzkRWpph_h9Va3F_fToy2W3F0YVDSID_GaPgFlpU-EDxFSmT4Zn-7w",
+            "APNQkAHyiF34eU8D63NTok0MzW4WN2X9xloAu80H6ZaNthlYYVlAknXFaSBhKxx9F9BwY_srDoViyXlcJSE3HUPVJwN1vEiFe5ShfADgMD58JofHdeGEHobYHUV9HxNQ2Cgt32Xe6sE",            "APNQkAEVcSeW-75uijc69vnPjDg5s0b7RvrI4PsgQbesJrxoZVz9Ij6DjPMgO4q9cZgjd1ZMWe9lG7YWzEG9Uh8MgIcjZ8RiGC-dxj8289DsacUuKXM24uuV95houBDXAK9u_QIPWt82",
+            "APNQkAFzFiy8UgJ1Rz7BocUsjh4V8bGhf89DEdhBfbNxJ7q9nNlS7C_vZP6t2VrSiUn01g5zLeVb2aEb3QHzvxcrvKVGZr35URo5Rn-KAMWmAcd3dLmhrSpWavlWA8TLHiga22WN5fmS",
+            "APNQkAFgqGWQVVn0FBF4C92FDGTntbLLuGxda3XSQBsWLATvOL9WhmIKWPtRAfI3wA0D-wKNJnMeWGdfJLVIRSA09-t3jpbyUnX2IIYKSaMaCr2JqzEoAeuRvvT1LCGBdc2JYiqC2HvYHg",
+            "APNQkAGPLXFP7AiLOkFGs42604mc8vVKdbd4oJ8i2U3PvbaN8ViDcw6AXImn7AlbBkh_1yPB0jSKOx6YND5F0sVKdN-NFhSpqAvq8ELgyUdPdnUvtq6sjnpQ7SPrFas4g1OrLr7WZtEqGA",
+            "APNQkAHAkbvLa6KfPIBFfVY7QAvR1fqbqGSzuozUKUBZ55cqan83MsfdDE0LXQA9tiWOSPR5p7uNvQSgd0Xr7yUaowle8kY49glFJ9iBfvA7Np-y_PTmzYwTdukFUGGhfjoVuJx7cre2",
+            "APNQkAGSE8MywzuMDRiWhY732CbNsn14G4719qNspPMpRTks6vhSRK4vmnVRZrrSyIYydOdXK-SXoB2sCS_4w-9jBlDv6wM1zKKLfKO12b-VbgUINwl2JMDUaa3P_5M3rmmQmfRN3fM4nZ0pV1fs",
+            "APNQkAEg1XOPRdyyUSF_BOMA21UtBSY577Wl9Cs0wQSMI1nb8-H4WwSWxDIkzISTdNPJ6A9-hZ21e49HI5zRpmTCkAjnTcuBAZyUs1o6OWo17uJbgwdpIfC0qauxq-dlCymnDLDOiPEXtRLg-7FF",
+            "APNQkAGxxY77c04rRj5bohJjSfM5CsQIYGoSoq0gQnu7U62B63eDGIr4evjoDx2LamZCSHB9ZyPrAMWIvajCtGdSJYKiDV4h8YtgoQsWZdZue6FIBLY1Jc4moh6XX5UUQXq5gpVjsRWWsMhR9da1",
+            "APNQkAG3MVNBOzU6SOBZINVBO8_-7cJ4Y61WOX5h1-5-qKcrwylwPa4Ll2UcAMrqTfthSqeGjwMcAgNysRbVwYF8wE83yAzinyL_Af1ReYHMCMesI0f1dL34Dh8z6wVSwp_jN4hOA6Ylj5kqmh3o",
+            "APNQkAHfX1C0QKzIbshIr4aS7uBad2q5snTT6zhY9Fgd8W8X62coPVrvS2F3rQIvyEgkiJ67f6LYrJNjLn4IsoMnB7qxWq5gUAC_tEsdPYeQ9qUDscyr3UUcgimazl3Nv3borWybQ6AXJYjJrYs",
+            "APNQkAEwidHHGrmQihSyFi66W2KYDqpQdxNnPQD8OkFTKXTCtqr7UChRVFZJCoGnyLJLuWOJZq7M5OQ-63qh99h5w16R0u9GVJTlSSyPwxLc-lKnfmZycRDRaYLFcVJdpRFqLJP_jr2zfgcL2xwL"
+        ];
+
+        // --- GERAÇÃO DAS FOTOS ESPALHADAS (MESA DE PROJETOS) ---
+        function renderSpiralGallery() {
+            const container = document.getElementById('dynamic-gallery');
+            if (!container) return;
+
+            const width = container.clientWidth;
+            const isMobile = window.innerWidth < 768;
+            
+            // Distribui os cards em colunas invisíveis para ocupar toda a largura da tela (sem buracos nas laterais)
+            const cols = isMobile ? 2 : (window.innerWidth < 1024 ? 3 : 3);
+            const colWidth = width / cols;
+            
+            // Tamanho da foto: deixa uma margem base para elas não ficarem tão esmagadas umas nas outras
+            const itemWidth = isMobile ? (colWidth * 0.85) : (colWidth * 0.75); 
+            const itemHeight = itemWidth * 1.25; // Proporção Polaroid (4/5)
+            
+            // Distância vertical entre os quadros (aumentado para mostrar mais a foto e ter menos sobreposição)
+            const ySpacing = itemHeight * 0.85; 
+            
+            let html = '';
+            const total = galleryImageIds.length;
+            
+            galleryImageIds.forEach((id, index) => {
+                const col = index % cols;
+                const row = Math.floor(index / cols);
+
+                // Matemática pseudo-aleatória para manter o caos visual fixo e não pular imagens
+                const pr1 = Math.abs((Math.sin(index * 12.9898) * 43758.5453) % 1);
+                const pr2 = Math.abs((Math.cos(index * 78.233) * 43758.5453) % 1);
+                
+                // Encontra o centro da "célula" atual no grid invisível para distribuir uniformemente
+                const xBase = (col * colWidth) + (colWidth / 2);
+                const yBase = row * ySpacing;
+                
+                // Adiciona ruído/caos para espalhar pela mesa: afasta as fotos pros lados e pra cima/baixo
+                const xNoise = (pr1 - 0.5) * (colWidth * 0.45); // Espalha randomicamente até 45% do espaço livre
+                const yNoise = (pr2 - 0.5) * (ySpacing * 0.4); 
+                
+                const xPos = xBase + xNoise;
+                const yPos = yBase + yNoise + (isMobile ? 20 : 50); // Margin top extra
+                
+                // Rotação desordenada dos quadros (entre -22 e +22 graus)
+                const rot = (pr1 * 44) - 22; 
+                
+                // Ordem de sobreposição natural
+                const z = index;
+                
+                html += `
+                    <div class="spiral-wrap reveal" 
+                         style="left: ${xPos - itemWidth/2}px; top: ${yPos}px; z-index: ${z}; width: ${itemWidth}px;">
+                        <div class="spiral-item" style="transform: rotate(${rot}deg); height: ${itemHeight}px;" onclick="openLightbox(${index})">
+                            <img src="https://lh3.googleusercontent.com/gps-cs-s/${id}=w1900-h1200-k-no" loading="lazy" alt="Projeto de Arquitetura">
+                            <div class="polaroid-overlay">
+                                <span class="polaroid-text">Ampliar Projeto</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Define a altura do container para caber a "mesa" inteira dinamicamente
+            const totalRows = Math.ceil(total / cols);
+            container.style.height = `${(totalRows * ySpacing) + (itemHeight * 0.6)}px`;
+            container.innerHTML = html;
+            
+            // Reativa a animação de scroll (reveal) para os novos cards desenhados
+            reveal();
+        }
+
+        // Evita travamentos ao girar a tela do celular ou redimensionar no PC
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(renderSpiralGallery, 200);
+        });
+
+        // Desenha a arte na primeira vez que abre o site
+        renderSpiralGallery();
+
+        /* --- SISTEMA DE LIGHTBOX E SWIPE (TELACHEIA E DESLIZE) --- */
+        let currentImageIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCounter = document.getElementById('lightbox-counter');
+        const touchArea = document.getElementById('lightbox-touch-area');
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            updateLightbox();
+            lightbox.classList.remove('hidden');
+            setTimeout(() => lightbox.classList.remove('opacity-0'), 10);
+            document.body.classList.add('lightbox-open');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                document.body.classList.remove('lightbox-open');
+            }, 300);
+        }
+
+        function changeLightboxImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = galleryImageIds.length - 1;
+            else if (currentImageIndex >= galleryImageIds.length) currentImageIndex = 0;
+            
+            lightboxImg.style.transform = 'scale(0.95)';
+            lightboxImg.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                updateLightbox();
+                lightboxImg.style.transform = 'scale(1)';
+                lightboxImg.style.opacity = '1';
+            }, 150);
+        }
+
+        function updateLightbox() {
+            const id = galleryImageIds[currentImageIndex];
+            lightboxImg.src = `https://lh3.googleusercontent.com/gps-cs-s/${id}=w1900-h1200-k-no`;
+            lightboxCounter.textContent = `${currentImageIndex + 1} / ${galleryImageIds.length}`;
+        }
+
+        // Controles de Teclado no Computador
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('hidden')) return;
+            if (e.key === 'ArrowRight') changeLightboxImage(1);
+            if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Controles de Deslize (Swipe) no Celular
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        touchArea.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        touchArea.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const threshold = 40; // Distância do deslize
+            if (touchendX < touchstartX - threshold) changeLightboxImage(1); // Esquerda
+            if (touchendX > touchstartX + threshold) changeLightboxImage(-1); // Direita
+        }
+
+        // Clicar fora para fechar
+        lightbox.addEventListener('click', (e) => {
+            if(e.target === lightbox || e.target.classList.contains('relative')) closeLightbox();
+        });
+
+        // Menu Mobile (Hambúrguer)
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const icon = btn.querySelector('i');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) nav.classList.add('shadow-sm');
+            else nav.classList.remove('shadow-sm');
+        });
+
+        // Revela as coisas conforme você desce a tela
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 50) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
+</body>
+</html>
